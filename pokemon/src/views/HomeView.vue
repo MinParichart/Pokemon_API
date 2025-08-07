@@ -1,7 +1,6 @@
 <template>
-  
   <div class="container mx-auto px-4 py-8">
-    <Header/> 
+    <Header @search="handleSearch" />
     <div v-if="loading" class="text-center py-12">
       <p class="text-xl">Loading...</p>
     </div>
@@ -13,16 +12,21 @@
     <!-- display current page number -->
     <div v-else>
       <div class="text-center mb-4">
-        <span class="font-mono text-xl"> Page {{  currentPage }}</span>
+        <span class="font-mono text-xl"> Page {{ currentPage }}</span>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div
+        v-if="filteredPokemons.length"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
         <CardDisplay
-          v-for="pokemon in pokemons"
+          v-for="pokemon in filteredPokemons"
           :key="pokemon.name"
           :pokemon="pokemon"
         ></CardDisplay>
       </div>
+
+      <div v-else class="text-center text-gray-500">No Pokémon matched your search.</div>
 
       <div v-if="nextPage || previousPage" class="flex justify-center mt-8 space-x-4">
         <button
@@ -46,19 +50,23 @@
 </template>
 
 <script setup lang="ts">
-import CardDisplay from "@/components/CardDisplay.vue"
-import Header from "@/components/Header.vue"
+import CardDisplay from '@/components/CardDisplay.vue'
+import Header from '@/components/Header.vue'
 import usePokemon from '@/composables/usePokemon'
-import { onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
-const { pokemons, 
-  loading, 
-  error, 
-  nextPage, 
-  previousPage, 
-  currentPage, 
-  fetchPokemons }
-   = usePokemon()
+const { pokemons, loading, error, nextPage, previousPage, currentPage, fetchPokemons } =
+  usePokemon()
+
+const searchQuery = ref('')
+
+const handleSearch = (query: string) => {
+  searchQuery.value = query.toLowerCase()
+}
+
+const filteredPokemons = computed(() => {
+  return pokemons.value.filter((p) => p.name.toLowerCase().includes(searchQuery.value))
+})
 
 onMounted(() => {
   fetchPokemons()

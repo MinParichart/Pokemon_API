@@ -1,9 +1,8 @@
-
 <template>
   <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
     <div class="text-center">
-      <img 
-        :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`" 
+      <img
+        :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`"
         :alt="pokemon.name"
         class="mx-auto h-24 w-24"
       />
@@ -14,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const props = defineProps<{
   pokemon: {
