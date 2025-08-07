@@ -11,16 +11,19 @@
 
     <!-- display current page number -->
     <div v-else>
-      <div class="text-center mb-4">
-        <span class="font-mono text-xl"> Page {{ currentPage }}</span>
+      <div class="text-center mb-4 text-gray-700">
+        <p class="text-base">
+          Result : {{ startIndex + 1 }} - {{ endIndex }} of {{ filteredPokemons.length }}
+        </p>
       </div>
 
+      <!-- Pokemon grid -->
       <div
-        v-if="filteredPokemons.length"
+        v-if="paginatedPokemons.length"
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
       >
         <CardDisplay
-          v-for="pokemon in filteredPokemons"
+          v-for="pokemon in paginatedPokemons"
           :key="pokemon.name"
           :pokemon="pokemon"
         ></CardDisplay>
@@ -28,21 +31,31 @@
 
       <div v-else class="text-center text-gray-500">No Pokémon matched your search.</div>
 
-      <div v-if="nextPage || previousPage" class="flex justify-center mt-8 space-x-4">
+      <!-- Pagination buttons -->
+      <div v-if="totalPages > 1" class="flex justify-center mt-8 flex-wrap gap-2">
         <button
-          @click="fetchPokemons(previousPage)"
-          :disabled="!previousPage"
+          @click="goToPage(currentPage - 1)"
+          :disabled="currentPage === 1"
           class="px-4 py-2 bg-blue-400 text-white rounded disabled:opacity-50"
         >
-          Previous
+          ← Previous
         </button>
 
         <button
-          @click="fetchPokemons(nextPage)"
-          :disabled="!nextPage"
-          class="px-4 py-2 bg-blue-400 text-white rounded disabled:opacity-50"
+          v-for="page in visiblePages"
+          :key="page"
+          @click="goToPage(page)"
+          :class="['px-3 py-1 border rounded', currentPage == page? 'bg-blue-500 text-white' : '']"
         >
-          Next
+          {{ page }}
+        </button>
+
+        <button
+          @click="goToPage(currentPage + 1)"
+          :disabled="currentPage === totalPages"
+          class="px-3 py-1 border rounded"
+        >
+          Next →
         </button>
       </div>
     </div>
@@ -55,18 +68,57 @@ import Header from '@/components/Header.vue'
 import usePokemon from '@/composables/usePokemon'
 import { computed, onMounted, ref } from 'vue'
 
-const { pokemons, loading, error, nextPage, previousPage, currentPage, fetchPokemons } =
-  usePokemon()
+const { pokemons, loading, error, fetchPokemons } = usePokemon()
 
 const searchQuery = ref('')
+const currentPage = ref(1)
+const cardsPerPage = 20
 
 const handleSearch = (query: string) => {
   searchQuery.value = query.toLowerCase()
+  currentPage.value = 1
 }
 
 const filteredPokemons = computed(() => {
   return pokemons.value.filter((p) => p.name.toLowerCase().includes(searchQuery.value))
 })
+
+const totalPages = computed(() => 
+  Math.ceil(filteredPokemons.value.length/ cardsPerPage))
+
+const paginatedPokemons = computed(() => {
+  const start = (currentPage.value - 1) * cardsPerPage
+  return filteredPokemons.value.slice(start, start + cardsPerPage)
+})
+
+const startIndex = computed(() => (currentPage.value - 1) * cardsPerPage)
+
+const endIndex = computed(() =>
+  Math.min(startIndex.value + cardsPerPage, filteredPokemons.value.length),
+)
+
+const goToPage = (page : number) => {
+  if (page >= 1 && page <= totalPages.value) { 
+    currentPage.value = page
+  }
+}
+
+// Generate visible page bumbers
+const visiblePages = computed(() => { 
+  const pages = []
+  const total = totalPages.value
+  const current = currentPage.value
+  const range = 2 
+
+  for ( let i = Math.max(1, current - range); i <= Math.min(total, current + range); i++) {
+    pages.push(i)
+  }
+
+  return pages
+
+})
+
+
 
 onMounted(() => {
   fetchPokemons()
