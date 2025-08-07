@@ -1,0 +1,20 @@
+@import './base.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=League+Spartan:wght@100..900&display=swap');
+
+html {
+  box-sizing: border-box;
+  font-family: "Caprasimo"; 
+}
+
+*,
+*:before,
+*:after {
+  /* refer to parent element */
+  box-sizing: inherit; 
+}
+
+body{
+  background: rgb(172, 216, 233);
+}
+

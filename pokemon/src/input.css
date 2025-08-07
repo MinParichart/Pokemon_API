@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@plugin "daisyui";
+
+/* @layer base{
+  a{
+    @apply text-blue-500
+  }
+}
+
+@layer conponent{
+  .menu-button{
+    @apply text-green-500 bg-yellow-100 p-3
+  }
+}
+
+@layer utilities{
+  .text-red-500{
+    color:blue;
+    font-size:1.5rem;
+    font-weight:500;
+  }
+} */
+
+
+
+
