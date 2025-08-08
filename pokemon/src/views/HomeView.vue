@@ -26,6 +26,7 @@
           v-for="pokemon in paginatedPokemons"
           :key="pokemon.name"
           :pokemon="pokemon"
+          :current-page="currentPage"
         ></CardDisplay>
       </div>
 
@@ -67,6 +68,10 @@ import CardDisplay from '@/components/CardDisplay.vue'
 import Header from '@/components/Header.vue'
 import usePokemon from '@/composables/usePokemon'
 import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute() 
+const router = useRouter()
 
 const { pokemons, loading, error, fetchPokemons } = usePokemon()
 
@@ -77,6 +82,7 @@ const cardsPerPage = 20
 const handleSearch = (query: string) => {
   searchQuery.value = query.toLowerCase()
   currentPage.value = 1
+  router.replace({name : 'home', query : {page : '1' } })
 }
 
 const filteredPokemons = computed(() => {
@@ -100,6 +106,7 @@ const endIndex = computed(() =>
 const goToPage = (page : number) => {
   if (page >= 1 && page <= totalPages.value) { 
     currentPage.value = page
+    router.replace({ name : 'home', query : {page : String(page) } })
   }
 }
 
@@ -120,8 +127,10 @@ const visiblePages = computed(() => {
 
 
 
-onMounted(() => {
-  fetchPokemons()
+onMounted(async () => {
+  await fetchPokemons()
+  const q = Number(route.query.page || 1)
+  currentPage.value = Number.isFinite(q) && q >= 1 ? q : 1
 })
 </script>
 

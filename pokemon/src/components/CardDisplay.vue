@@ -1,5 +1,11 @@
 <template>
-  <RouterLink :to="`/pokemon/${pokemonId}`" class="block mt-2">
+  <RouterLink 
+  :to="{
+    name : 'pokemon-detail', 
+    params : { id : pokemonId }, 
+    query : {page : String(currentPage)}
+  }" 
+  class="block mt-2">
     <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-2xl transition-shadow">
       <div class="text-center">
         <img
@@ -15,13 +21,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from 'vue';
 
 const props = defineProps<{
   pokemon: {
     name: string
     url: string
   }
+  currentPage : number
 }>()
 
 const pokemonId = computed(() => {
