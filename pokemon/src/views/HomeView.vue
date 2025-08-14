@@ -1,3 +1,78 @@
+<script setup lang="ts">
+import CardDisplay from '@/components/CardDisplay.vue'
+import Header from '@/components/Header.vue'
+import usePokemon from '@/composables/usePokemon'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+// 
+const { pokemons, loading, error, fetchPokemons } = usePokemon()
+
+const searchQuery = ref('')
+const currentPage = ref(1)
+const cardsPerPage = 20
+
+const handleSearch = (query: string) => {
+  searchQuery.value = query.toLowerCase()
+  currentPage.value = 1
+  router.replace({ name: 'home', query: { page: '1' } })
+}
+
+const filteredPokemons = computed(() => {
+  return pokemons.value.filter((p) => p.name.toLowerCase().includes(searchQuery.value))
+})
+
+const totalPages = computed(() => Math.ceil(filteredPokemons.value.length / cardsPerPage))
+
+const paginatedPokemons = computed(() => {
+  const start = (currentPage.value - 1) * cardsPerPage
+  return filteredPokemons.value.slice(start, start + cardsPerPage)
+})
+
+const startIndex = computed(() => (currentPage.value - 1) * cardsPerPage)
+
+const endIndex = computed(() =>
+  Math.min(startIndex.value + cardsPerPage, filteredPokemons.value.length),
+)
+
+const goToPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+    router.replace({ name: 'home', query: { page: String(page) } })
+  }
+}
+
+// Generate visible page bumbers
+const visiblePages = computed(() => {
+  const pages = []
+  const total = totalPages.value
+  const current = currentPage.value
+  const range = 2
+
+  for (let i = Math.max(1, current - range); i <= Math.min(total, current + range); i++) {
+    pages.push(i)
+  }
+
+  return pages
+})
+
+onMounted(async () => {
+  await fetchPokemons()
+  const q = Number(route.query.page || 1)
+  currentPage.value = Number.isFinite(q) && q >= 1 ? q : 1
+})
+</script>
+
+<style scoped>
+.font-caprasimo {
+  font-family: 'Caprasimo';
+}
+</style>
+
+
 <template>
   <div class="container mx-auto px-4 py-8">
     <Header @search="handleSearch" />
@@ -37,7 +112,12 @@
         <button
           @click="goToPage(currentPage - 1)"
           :disabled="currentPage === 1"
-          class="px-4 py-2 bg-blue-400 text-white rounded disabled:opacity-50"
+          :class="[
+            'px-4 py-2 rounded',
+            currentPage === 1
+              ? 'bg-gray-400 text-white cursor-not-allowed'
+              : 'bg-blue-400 text-white hover:bg-blue-500',
+          ]"
         >
           ← Previous
         </button>
@@ -46,7 +126,7 @@
           v-for="page in visiblePages"
           :key="page"
           @click="goToPage(page)"
-          :class="['px-3 py-1 border rounded', currentPage == page? 'bg-blue-500 text-white' : '']"
+          :class="['px-3 py-1 border rounded', currentPage == page ? 'bg-blue-500 text-white' : '']"
         >
           {{ page }}
         </button>
@@ -54,7 +134,12 @@
         <button
           @click="goToPage(currentPage + 1)"
           :disabled="currentPage === totalPages"
-          class="px-3 py-1 border rounded"
+          :class="[
+            'px-4 py-2 rounded',
+            currentPage === totalPages
+              ? 'bg-gray-400 text-white cursor-not-allowed'
+              : 'bg-blue-400 hover:bg-blue-500',
+          ]"
         >
           Next →
         </button>
@@ -63,79 +148,3 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import CardDisplay from '@/components/CardDisplay.vue'
-import Header from '@/components/Header.vue'
-import usePokemon from '@/composables/usePokemon'
-import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-
-const route = useRoute() 
-const router = useRouter()
-
-const { pokemons, loading, error, fetchPokemons } = usePokemon()
-
-const searchQuery = ref('')
-const currentPage = ref(1)
-const cardsPerPage = 20
-
-const handleSearch = (query: string) => {
-  searchQuery.value = query.toLowerCase()
-  currentPage.value = 1
-  router.replace({name : 'home', query : {page : '1' } })
-}
-
-const filteredPokemons = computed(() => {
-  return pokemons.value.filter((p) => p.name.toLowerCase().includes(searchQuery.value))
-})
-
-const totalPages = computed(() => 
-  Math.ceil(filteredPokemons.value.length/ cardsPerPage))
-
-const paginatedPokemons = computed(() => {
-  const start = (currentPage.value - 1) * cardsPerPage
-  return filteredPokemons.value.slice(start, start + cardsPerPage)
-})
-
-const startIndex = computed(() => (currentPage.value - 1) * cardsPerPage)
-
-const endIndex = computed(() =>
-  Math.min(startIndex.value + cardsPerPage, filteredPokemons.value.length),
-)
-
-const goToPage = (page : number) => {
-  if (page >= 1 && page <= totalPages.value) { 
-    currentPage.value = page
-    router.replace({ name : 'home', query : {page : String(page) } })
-  }
-}
-
-// Generate visible page bumbers
-const visiblePages = computed(() => { 
-  const pages = []
-  const total = totalPages.value
-  const current = currentPage.value
-  const range = 2 
-
-  for ( let i = Math.max(1, current - range); i <= Math.min(total, current + range); i++) {
-    pages.push(i)
-  }
-
-  return pages
-
-})
-
-
-
-onMounted(async () => {
-  await fetchPokemons()
-  const q = Number(route.query.page || 1)
-  currentPage.value = Number.isFinite(q) && q >= 1 ? q : 1
-})
-</script>
-
-<style scoped>
-.font-caprasimo {
-  font-family: 'Caprasimo';
-}
-</style>

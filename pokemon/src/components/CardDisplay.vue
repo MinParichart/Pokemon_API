@@ -1,4 +1,25 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+// กำหนดว่า componnent นี้ต้องรับค่า props 2 อย่าง 
+const props = defineProps<{
+  pokemon: {
+    name: string
+    url: string
+  }
+  currentPage : number
+}>()
+
+const pokemonId = computed(() => {
+  const urlParts = props.pokemon.url.split('/')
+  console.log("urlpart : Real :" + urlParts)
+  return parseInt(urlParts[urlParts.length - 2])
+})
+</script>
+
+
 <template>
+  <!-- ใช้แทน <a> ใน html เพื่อทำงานกับ Vue Router -->
   <RouterLink 
   :to="{
     name : 'pokemon-detail', 
@@ -20,19 +41,3 @@
   </RouterLink>
 </template>
 
-<script setup lang="ts">
-import { computed } from 'vue';
-
-const props = defineProps<{
-  pokemon: {
-    name: string
-    url: string
-  }
-  currentPage : number
-}>()
-
-const pokemonId = computed(() => {
-  const urlParts = props.pokemon.url.split('/')
-  return parseInt(urlParts[urlParts.length - 2])
-})
-</script>

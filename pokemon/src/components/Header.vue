@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <h1 class="text-blue-800 font-bold text-5xl">Pokemon</h1>
+    <h1 class="text-blue-800 font-bold text-5xl">Pokemon List</h1>
     <form class="flex items-center max-w-sm mx-auto mt-5 mb-5">
       <label for="simple-search" class="sr-only">Search</label>
       <div class="relative w-full">
