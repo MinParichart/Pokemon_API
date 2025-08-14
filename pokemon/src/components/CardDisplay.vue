@@ -32,7 +32,7 @@ const pokemonId = computed(() => {
         <img
           :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`"
           :alt="pokemon.name"
-          class="mx-auto h-24 w-24"
+          class="mx-auto h-48 w-48"
         />
         <h3 class="text-lg font-semibold capitalize mt-2">{{ pokemon.name }}</h3>
         <span class="text-gray-500">#{{ pokemonId.toString().padStart(3, '0') }}</span>

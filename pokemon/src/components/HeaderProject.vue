@@ -1,8 +1,28 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+
+// emit คือ บอกว่า Component นี้จะปล่อย event ชื่อ search ให้ parent component รับไป 
+// |syntax >> const emit = defineEmits(['ชื่ออีเวนต์ที่ component จะปล่อย'])
+const emit = defineEmits(['search'])
+
+// เก็บค่าข้อความค้นหา
+const searchTerm = ref('')
+
+// สร้าง function emitSearch เพื่อเวลาถูกเรียก จะทำการ emit event ชื่อ "search" ออกไป ค่าที่ส่งออกไปก็คือ searchTerm.value (ข้อความที่ผู้ใช้พิมพ์ในช่องค้นหา) 
+// |syntax >> sendEvent('search', 'ข้อมูลที่ส่ง')
+const emitSearch = () => {
+  emit('search', searchTerm.value)
+}
+</script>
+
 <template>
   <div class="header">
+    
+    <!-- Heading Word -->
     <h1 class="text-blue-800 font-bold text-5xl">Pokemon List</h1>
+
+    <!-- search  -->
     <form class="flex items-center max-w-sm mx-auto mt-5 mb-5">
-      <label for="simple-search" class="sr-only">Search</label>
       <div class="relative w-full">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
           <svg
@@ -21,6 +41,9 @@
             />
           </svg>
         </div>
+        <!-- v-model เชื่อมค่าที่พิมพ์กับตัวแปร searchTerm-->
+        <!-- @input ="emitSearch" หรือ v-on:input ="emitSearch" ทุกครั้งที่พิมพ์ ให้เรียก emitSearch() เพื่อส่งค่ากลับไป parent -->
+        <!-- required บอกว่า ต้องกรอกข้อมูลก่อน ถึงจะส่ง form ได้ (enter)-->
         <input
           v-model="searchTerm"
           @input="emitSearch"
@@ -35,15 +58,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-
-const emit = defineEmits(['search'])
-const searchTerm = ref('')
-const emitSearch = () => {
-  emit('search', searchTerm.value)
-}
-</script>
 
 <style scoped>
 .header {
@@ -52,3 +66,5 @@ const emitSearch = () => {
   font-family: 'Caprasimo';
 }
 </style>
+
+

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CardDisplay from '@/components/CardDisplay.vue'
-import Header from '@/components/Header.vue'
+import Header from '@/components/HeaderProject.vue'
 import usePokemon from '@/composables/usePokemon'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
