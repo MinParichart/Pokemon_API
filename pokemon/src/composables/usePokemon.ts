@@ -25,9 +25,11 @@ export default function usePokemon() {
       error.value = null
 
       // ขอข้อมูลแบบ GET และบอก TS ว่าโครงสร้าง response มี results: Pokemon[]
-    const response = await Axios.get<{results: Pokemon[]}>(`https://pokeapi.co/api/v2/pokemon?limit=200`)
-    // ดึงข้อมูลที่ GET ได้ลงใน pokemons.value
-    pokemons.value = response.data.results
+      const response = await Axios.get<{ results: Pokemon[] }>(
+        `https://pokeapi.co/api/v2/pokemon?limit=200`,
+      )
+      // ดึงข้อมูลที่ GET ได้ลงใน pokemons.value
+      pokemons.value = response.data.results
     } catch (err) {
       // ถ้า error ให้ error.value แสดง log ข้อผิดพลาด
       error.value = 'Error fetching Pokemon'
@@ -45,7 +47,3 @@ export default function usePokemon() {
     fetchPokemons,
   }
 }
-
-
-
-

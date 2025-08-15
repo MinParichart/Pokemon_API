@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 // กำหนดว่า componnent นี้ต้องรับค่า props 2 อย่าง จาก parent component
 const props = defineProps<{
@@ -7,10 +7,10 @@ const props = defineProps<{
     name: string
     url: string
   }
-  currentPage : number
+  currentPage: number
 }>()
 
-// computed() จะอัพเดพให้ออโต้ทุกครั้ง ที่ข้อมูลต้นทางเปลี่ยน 
+// computed() จะอัพเดพให้ออโต้ทุกครั้ง ที่ข้อมูลต้นทางเปลี่ยน
 const pokemonId = computed(() => {
   // เอาค่า props.pokemon.url มาแยก URL ออกเป็นชิ้น ๆ โดยใช้ / เป็นตัวแบ่ง
   const urlParts = props.pokemon.url.split('/')
@@ -19,19 +19,19 @@ const pokemonId = computed(() => {
 })
 </script>
 
-
 <template>
   <!-- ใช้แทน <a> ใน html เพื่อทำงานกับ Vue Router -->
-  <RouterLink 
-  :to="{
-    // ไปหน้า route ชื่อ pokemon-detail
-    name : 'pokemon-detail', 
-    // ส่งค่า id ของ pokemon ไป 
-    params : { id : pokemonId }, 
-    // ส่งหมายเลขหน้าปัจจุบัน ใน query string เช่น ?page=2
-    query : {page : String(currentPage)}
-  }" 
-  class="block mt-2">
+  <RouterLink
+    :to="{
+      // ไปหน้า route ชื่อ pokemon-detail
+      name: 'pokemon-detail',
+      // ส่งค่า id ของ pokemon ไป
+      params: { id: pokemonId },
+      // ส่งหมายเลขหน้าปัจจุบัน ใน query string เช่น ?page=2
+      query: { page: String(currentPage) },
+    }"
+    class="block mt-2"
+  >
     <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-2xl transition-shadow">
       <div class="text-center">
         <img
@@ -47,4 +47,3 @@ const pokemonId = computed(() => {
     </div>
   </RouterLink>
 </template>
-

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-// emit คือ บอกว่า Component นี้จะปล่อย event ชื่อ search ให้ parent component รับไป 
+// emit คือ บอกว่า Component นี้จะปล่อย event ชื่อ search ให้ parent component รับไป
 // |syntax >> const emit = defineEmits(['ชื่ออีเวนต์ที่ component จะปล่อย'])
 const emit = defineEmits(['search'])
 
 // เก็บค่าข้อความค้นหา
 const searchTerm = ref('')
 
-// สร้าง function emitSearch เพื่อเวลาถูกเรียก จะทำการ emit event ชื่อ "search" ออกไป ค่าที่ส่งออกไปก็คือ searchTerm.value (ข้อความที่ผู้ใช้พิมพ์ในช่องค้นหา) 
+// สร้าง function emitSearch เพื่อเวลาถูกเรียก จะทำการ emit event ชื่อ "search" ออกไป ค่าที่ส่งออกไปก็คือ searchTerm.value (ข้อความที่ผู้ใช้พิมพ์ในช่องค้นหา)
 // |syntax >> sendEvent('search', 'ข้อมูลที่ส่ง')
 const emitSearch = () => {
   emit('search', searchTerm.value)
@@ -17,9 +17,8 @@ const emitSearch = () => {
 
 <template>
   <div class="header">
-    
     <!-- Heading Word -->
-    <h1 class="text-blue-800 font-bold text-5xl">Pokemon List</h1>
+    <h1 class="text-blue-500 stroke-2 font-bold text-5xl">Pokemon List</h1>
 
     <!-- search  -->
     <form class="flex items-center max-w-sm mx-auto mt-5 mb-5">
@@ -49,7 +48,7 @@ const emitSearch = () => {
           @input="emitSearch"
           type="text"
           id="simple-search"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 font-fam-search"
           placeholder="Search Pokemon name..."
           required
         />
@@ -58,13 +57,18 @@ const emitSearch = () => {
   </div>
 </template>
 
-
 <style scoped>
 .header {
   text-align: center;
   padding-top: 50px;
-  font-family: 'Caprasimo';
+  /* font-family: 'DASHER'; */
+  /* font-family: 'Caprasimo'; */
+  /* font-family: 'Pokemon Solid';
+  font-family: 'Pokemon Hollow'; */
+  font-family: 'Audio Nugget'; 
+}
+
+.font-fam-search {
+  font-family: 'Courier New', Courier, monospace;
 }
 </style>
-
-
